@@ -1,8 +1,9 @@
 let todoList = JSON.parse(localStorage.getItem('todoList')) || [];
 
-// Function to render the todo list
 function renderTodoList() {
   let todoListHTML = "";
+  //Keep in mind that the reason you need to delineate both a name for the array element at each index alongside the index, is so that you can easily access the 
+  //value at each instance.
   todoList.forEach((item, i) => {
     todoListHTML += 
       `<div class="todo-item">
@@ -12,12 +13,13 @@ function renderTodoList() {
   });
   document.querySelector('.todo-list').innerHTML = todoListHTML;
   
-  // Add event listeners for delete buttons
   todoList.forEach((item, i) => {
     document.querySelector(`.delete-item-js${i}`).addEventListener('click', () => {
       todoList.splice(i, 1);
       localStorage.setItem('todoList', JSON.stringify(todoList));
-      renderTodoList(); // Re-render instead of reloading
+      //it is pivotal to rerun the function where the html is being generated so that we can make sure the html or "snapshot" of our data matches that of 
+      //the actual state of the array after the splice and the push. this is why it is run at the end of every change to the array.
+      renderTodoList();
     });
   });
 }
@@ -28,19 +30,16 @@ function addtoToDoList() {
     todoList.push(input);
     localStorage.setItem('todoList', JSON.stringify(todoList));
     document.querySelector('.add-item-input-js').value = '';
-    renderTodoList(); // Update display
+    renderTodoList(); 
   }
 }
 
-// Add item functionality
 document.querySelector('.add-item-js').addEventListener('click', addtoToDoList);
 
-// Add enter key functionality
 document.querySelector('.add-item-input-js').addEventListener('keydown', (event) => {
   if (event.key === 'Enter') {
     addtoToDoList();
   }
 });
 
-// Initial render
 renderTodoList();
